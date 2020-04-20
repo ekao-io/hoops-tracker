@@ -1,14 +1,34 @@
 import React, { useState } from "react";
-import { DateTime } from "luxon";
+import DateFnsUtils from "@date-io/date-fns";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { Box, Grid } from "@material-ui/core";
+import WorkoutForm from "./WorkoutForm";
+
+import "./DayContainer.scss";
 
 export default function DayContainer() {
-  const [day, setDay] = useState(DateTime.local());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateChange = (date: MaterialUiPickersDate) => {
+    if (!date) {
+      return;
+    }
+    setSelectedDate(date);
+  };
 
   return (
-    <div>
-      <button onClick={() => setDay(day.minus({ days: 1 }))}>Prev</button>
-      <div>{day.toLocaleString(DateTime.DATE_MED)}</div>
-      <button onClick={() => setDay(day.plus({ days: 1 }))}>Next</button>
-    </div>
+    <Grid className="day-container">
+      <Grid>
+        <Box>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker value={selectedDate} onChange={handleDateChange} />
+          </MuiPickersUtilsProvider>
+        </Box>
+      </Grid>
+      <Grid>
+        <WorkoutForm />
+      </Grid>
+    </Grid>
   );
 }
